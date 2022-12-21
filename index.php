@@ -1,15 +1,15 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require '../PHPMailer/src/Exception.php';
-require '../PHPMailer/src/PHPMailer.php';
-require '../PHPMailer/src/SMTP.php';
+//use PHPMailer\PHPMailer\PHPMailer;
+//use PHPMailer\PHPMailer\Exception;
+//
+//require '../PHPMailer/src/Exception.php';
+//require '../PHPMailer/src/PHPMailer.php';
+//require '../PHPMailer/src/SMTP.php';
 
 if (isset($_POST['submit_button'])) {
     $conn = new mysqli('localhost', 'iciservi_1', 'amiirsadeqi@gmail.com', 'iciservi_1');
-    mysqli_set_charset($conn,"utf8");
+    mysqli_set_charset($conn, "utf8");
 
     function insertEducation($degree, $customer_id, $major, $school, $graduated_at, mysqli $conn)
     {
@@ -41,11 +41,11 @@ values ('" . $customer_id . "', '" . $job_position[$i] . "', '" . $company[$i] .
     }
 
 
-    function insertLanguageProficiency($score, $customer_id, $exam_date, $exam_title, $exam_type, mysqli $conn)
+    function insertLanguageProficiency($listening, $reading, $writing, $speaking, $customer_id, $exam_date, $exam_title, $exam_type, mysqli $conn)
     {
-        for ($i = 0; $i < count($score); $i++) {
-            $language_proficiency_data = "insert into IELTS(cid, issue_date, overall, title, type)
-values ('" . $customer_id . "', '" . $exam_date[$i] . "', '" . $score[$i] . "', '" . $exam_title[$i] . "', '" . $exam_type[$i] . "')";
+        for ($i = 0; $i < count($exam_title); $i++) {
+            $language_proficiency_data = "insert into IELTS(cid, issue_date, listening, reading, writing, speaking, title, type)
+values ('" . $customer_id . "', '" . $exam_date[$i] . "', '" . $listening[$i] . "', '" . $reading[$i] . "', '" . $writing[$i] . "', '" . $speaking[$i] . "', '" . $exam_title[$i] . "', '" . $exam_type[$i] . "')";
             $conn->query($language_proficiency_data);
 //        if (!$conn->query($language_proficiency_data)) {
 //            print_r($conn->error_list);
@@ -87,9 +87,9 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $phone_n
         $school = $_POST['school'];
         $graduated_at = $_POST['graduated_at'];
         list($i, $education_data) = insertEducation($degree, $customer_id, $major, $school, $graduated_at, $conn);
-    if (!$conn->query($education_data)) {
-        print_r($conn->error_list);
-    }
+        if (!$conn->query($education_data)) {
+            print_r($conn->error_list);
+        }
 //---------------------------------------------------------------work experience data-----------------------------------
 
         $job_position = $_POST['job_position'];
@@ -102,8 +102,12 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $phone_n
         $exam_title = $_POST['exam_title'];
         $exam_type = $_POST['exam_type'];
         $exam_date = $_POST['exam_date'];
-        $score = $_POST['score'];
-        list($i, $language_proficiency_data) = insertLanguageProficiency($score, $customer_id, $exam_date, $exam_title, $exam_type, $conn);
+//        $score = $_POST['score'];
+        $listening = $_POST['listening'];
+        $reading = $_POST['reading'];
+        $writing = $_POST['writing'];
+        $speaking = $_POST['speaking'];
+        list($i, $language_proficiency_data) = insertLanguageProficiency($listening, $reading, $writing, $speaking, $customer_id, $exam_date, $exam_title, $exam_type, $conn);
 
 //---------------------------------------------------------------children data------------------------------------------
         $child_name = $_POST['child_name'];
@@ -157,7 +161,7 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $address
         $sql = "SELECT id FROM customers WHERE name = '" . $name . "'";
         $dependant = $conn->query($sql)->fetch_assoc();
         if (!$conn->query($sql)) {
-             echo $conn->error;
+            echo $conn->error;
         }
         $dependant_id = $dependant['id'];
 //---------------------------------------------------------------education data-----------------------------------------
@@ -194,35 +198,35 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $address
 values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
             $documents_evaluated_by . "', '" . $documents_evaluated_at . "')";
         if ($conn->query($additional_info)) {
-        echo $conn->error;
+            echo $conn->error;
         }
 //---------------------------------------------------------------note---------------------------------------------------
 
-        $note = $_POST['note'];
-        $add_note = "insert into note(customer_id, text, author)
-values ('" . $customer_id . "', '" . $note . "', 0 )";
-        if ($conn->query($add_note)) {
-            $mail = new PHPMailer();
-            $mail->isSMTP();
-            $mail->Host = 'toos.dnswebhost.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'crm@iciservicesco.com';
-            $mail->Password = 'iciservices@3636807';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 26;
-            $mail->setFrom('crm@iciservicesco.com', 'IRAN & CANADA IMMIGRATION');
-            $mail->addAddress($email, $name);
-            $mail->CharSet = 'UTF-8';
-            $mail->isHTML(true);
-            $mail->Subject = 'سازمان مهاجرتی آی سی آی | نوت مشاور';
-            $mail->Body = '<p dir=rtl style="font-size: 18px;">' . $note . '</p>';
-            $mail->setLanguage('fa', 'PHPMailer/language/phpmailer.lang-fa.php');
-            $mail->send();
-
-            echo 'نوت ارسال شد';
-        } else {
-             echo $conn->error;
-        }
+//        $note = $_POST['note'];
+//        $add_note = "insert into note(customer_id, text, author)
+//values ('" . $customer_id . "', '" . $note . "', 0 )";
+//        if ($conn->query($add_note)) {
+//            $mail = new PHPMailer();
+//            $mail->isSMTP();
+//            $mail->Host = 'toos.dnswebhost.com';
+//            $mail->SMTPAuth = true;
+//            $mail->Username = 'crm@iciservicesco.com';
+//            $mail->Password = 'iciservices@3636807';
+//            $mail->SMTPSecure = 'tls';
+//            $mail->Port = 26;
+//            $mail->setFrom('crm@iciservicesco.com', 'IRAN & CANADA IMMIGRATION');
+//            $mail->addAddress($email, $name);
+//            $mail->CharSet = 'UTF-8';
+//            $mail->isHTML(true);
+//            $mail->Subject = 'سازمان مهاجرتی آی سی آی | نوت مشاور';
+//            $mail->Body = '<p dir=rtl style="font-size: 18px;">' . $note . '</p>';
+//            $mail->setLanguage('fa', 'PHPMailer/language/phpmailer.lang-fa.php');
+//            $mail->send();
+//
+//            echo 'نوت ارسال شد';
+//        } else {
+//             echo $conn->error;
+//        }
     }
 
     $conn->close();
@@ -237,7 +241,7 @@ values ('" . $customer_id . "', '" . $note . "', 0 )";
           name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <title>immigration required info form</title>
-    <link type="text/css" rel="stylesheet" href="./dist/jalalidatepicker.min.css" />
+    <link type="text/css" rel="stylesheet" href="./dist/jalalidatepicker.min.css"/>
     <link crossorigin="anonymous"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.rtl.min.css"
           integrity="sha384-dc2NSrAXbAkjrdm9IYrX10fQq9SDG6Vjz7nQVKdKcJl3pC+k37e7qJR5MVSCS+wR" rel="stylesheet">
@@ -269,7 +273,7 @@ values ('" . $customer_id . "', '" . $note . "', 0 )";
         .form-check-input {
             padding-right: unset !important;
         }
-        
+
     </style>
 </head>
 <body>
@@ -360,11 +364,11 @@ values ('" . $customer_id . "', '" . $note . "', 0 )";
         <hr>
         <div class="row justify-content-center">
             <div class="row justify-content-start mb-2">
-                <div class="col text-right"><h6>اطلاعات تحصیلی</h6></div>
+                <div class="col text-right"><h6>اطلاعات آخرین مدرک تحصیلی</h6></div>
             </div>
             <div class="row mb-1" id="education_wrapper">
                 <div class="col-xl-3 form-floating">
-                    <input class="form-control" name="degree[]" placeholder="مدرک تحصیلی" type="text">
+                    <input class="form-control" name="degree[]" placeholder="مقطع" type="text">
                     <label>مدرک تحصیلی</label>
                 </div>
                 <div class="col form-floating">
@@ -376,16 +380,17 @@ values ('" . $customer_id . "', '" . $note . "', 0 )";
                     <label>محل تحصیل</label>
                 </div>
                 <div class="col-xl-3 form-floating">
-                    <input data-jdp class="form-control" name="graduated_at[]" placeholder="تاریخ فارغ التحصیلی" type="text">
+                    <input data-jdp class="form-control" name="graduated_at[]" placeholder="تاریخ فارغ التحصیلی"
+                           type="text">
                     <label>تاریخ فارغ التحصیلی</label>
                 </div>
             </div>
-            <div class="row mb-2" id="more-education_input" style="display: contents"></div>
-            <button class="btn btn-primary col-1 mb-3" onclick="function addEducation() {
-            $('#education_wrapper').clone().find('input').val('').end().appendTo('#more-education_input');
-            }
-            addEducation()" type="button">+
-            </button>
+<!--            <div class="row mb-2" id="more-education_input" style="display: contents"></div>-->
+<!--            <button class="btn btn-primary col-1 mb-3" onclick="function addEducation() {-->
+<!--            $('#education_wrapper').clone().find('input').val('').end().appendTo('#more-education_input');-->
+<!--            }-->
+<!--            addEducation()" type="button">+-->
+<!--            </button>-->
 
             <div class="row mb-3">
                 <div class="col">
@@ -457,21 +462,54 @@ values ('" . $customer_id . "', '" . $note . "', 0 )";
                 <div class="col text-right"><h6>سطح دانش زبان</h6></div>
             </div>
             <div class="row mb-1" id="exam_input_wrapper">
-                <div class="col-xl-3 form-floating">
-                    <input class="form-control" name="exam_title[]" placeholder="نام مدرک زبان" type="text">
-                    <label>نام مدرک زبان</label>
+                <div class="row mb-2">
+                    <div class="col-xl-3">
+                        <select class="form-select" aria-label="Default select example" name="exam_title[]">
+                            <option selected>نام مدرک زبان</option>
+                            <option value="IELTS">IELTS</option>
+                            <option value="TEF(Canada)">TEF(Canada)</option>
+                            <option value="CELPIP">CELPIP</option>
+                            <option value="TOEFL">TOEFL</option>
+                            <option value="Doulingo">Doulingo</option>
+                            <option value="PTE">PTE</option>
+                        </select>
+                        <!--                    <input class="form-control" name="exam_title[]" placeholder="نام مدرک زبان" type="text">-->
+                        <!--                    <label>نام مدرک زبان</label>-->
+                    </div>
+                    <div class="col">
+                        <select class="form-select" aria-label="Default select example" name="exam_type[]">
+                            <option selected>نوع مدرک</option>
+                            <option value="General">General</option>
+                            <option value="Academic">Academic</option>
+                        </select>
+                        <!--                    <input class="form-control" name="exam_type[]" placeholder="نوع مدرک" type="text">-->
+                        <!--                    <label>نوع مدرک</label>-->
+                    </div>
+                    <div class="col">
+                        <input data-jdp class="form-control" name="exam_date[]" placeholder="تاریخ امتحان" type="text">
+                    </div>
+                    <!--                <div class="col-xl-3 form-floating">-->
+                    <!--                    <input class="form-control" name="score[]" placeholder="نمره" type="text">-->
+                    <!--                    <label>نمره</label>-->
+                    <!--                </div>-->
                 </div>
-                <div class="col form-floating">
-                    <input class="form-control" name="exam_type[]" placeholder="نوع مدرک" type="text">
-                    <label>نوع مدرک</label>
-                </div>
-                <div class="col form-floating">
-                    <input data-jdp class="form-control" name="exam_date[]" placeholder="تاریخ امتحان" type="text">
-                    <label>تاریخ امتحان</label>
-                </div>
-                <div class="col-xl-3 form-floating">
-                    <input class="form-control" name="score[]" placeholder="نمره" type="text">
-                    <label>نمره</label>
+                <div class="row mb-4">
+                    <div class="col-xl-3 form-floating">
+                        <input class="form-control" name="listening[]" placeholder="Listening" type="text">
+                        <label>Listening</label>
+                    </div>
+                    <div class="col-xl-3 form-floating">
+                        <input class="form-control" name="reading[]" placeholder="Reading" type="text">
+                        <label>Reading</label>
+                    </div>
+                    <div class="col-xl-3 form-floating">
+                        <input class="form-control" name="writing[]" placeholder="Writing" type="text">
+                        <label>Writing</label>
+                    </div>
+                    <div class="col-xl-3 form-floating">
+                        <input class="form-control" name="speaking[]" placeholder="Speaking" type="text">
+                        <label>Speaking</label>
+                    </div>
                 </div>
             </div>
             <div class="row mb-2" id="more-exam-input" style="display: contents"></div>
@@ -490,7 +528,8 @@ values ('" . $customer_id . "', '" . $note . "', 0 )";
                 <div class="col d-flex flex-column">
                     <label>لطفا میزان دارایی خود را از عددی بین 50 هزار دلار کانادا تا یک میلیون دلار کانادا را اعلام
                         کنید</label>
-                    <input id="asset_range" step="10000" class="form-control-range mt-2" dir="ltr" name="asset" type="range" min="50000" max="1000000">
+                    <input id="asset_range" step="10000" class="form-control-range mt-2" dir="ltr" name="asset"
+                           type="range" min="50000" max="1000000">
                 </div>
                 <div id="show_asset" class="mt-3" style="font-weight: bold"></div>
             </div>
@@ -522,286 +561,337 @@ values ('" . $customer_id . "', '" . $note . "', 0 )";
                 </div>
             </div>
             <div class="row mb-3" id="immediate_family">
-                <div class="col form-floating">
-                    <input class="form-control" name="immediate_family" placeholder="نسبت شخص" type="text">
-                    <label>نسبت شخص</label>
-                </div>
-                <div class="col form-floating">
-                    <input class="form-control" name="immediate_family_address" placeholder="محل زندگی شخص" type="text">
-                    <label>محل زندگی شخص</label>
-                </div>
-            </div>
-
-            <div class="row mb-3">
                 <div class="col">
-                    <label style="margin-left: 30px">آیا تاکنون برای هر یک از برنامه های مهاجرتی دائم یا موقت کانادا
-                        اقدام کرده اید؟</label>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="attempt" type="radio"
-                               value="0" onclick="function showImmigrationProgram() {
+                    <select class="form-select" aria-label="Default select example" name="immediate_family">
+                        <option selected>نسبت شخص</option>
+                        <option value="parents">parents</option>
+                        <option value="siblings">siblings</option>
+                        <option value="cousins">cousins</option>
+                        <option value="aunts/uncles">aunts/uncles</option>
+                    </select>
+                    <!--                    <input class="form-control" name="immediate_family" placeholder="نسبت شخص" type="text">-->
+                    <!--                    <label>نسبت شخص</label>-->
+                </div>
+                <!--                <div class="col form-floating">-->
+                <!--                    <input class="form-control" name="immediate_family_address" placeholder="محل زندگی شخص" type="text">-->
+                <!--                    <label>محل زندگی شخص</label>-->
+                <!--                </div>-->
+                <div class="col">
+                    <select class="form-select" aria-label="Default select example" name="immediate_family_address">
+                        <option selected>محل زندگی شخص</option>
+                        <option value="Ontario">Ontario</option>
+                        <option value="British Columbia">British Columbia</option>
+                        <option value="Alberta">Alberta</option>
+                        <option value="Saskatchewan">Saskatchewan</option>
+                        <option value="Quebec">Quebec</option>
+                        <option value="Manitoba">Manitoba</option>
+                        <option value="New Brunswick">New Brunswick</option>
+                        <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                        <option value="Nova Scotia">Nova Scotia</option>
+                        <option value="Nunavut">Nunavut</option>
+                        <option value="Prince Edward Island">Prince Edward Island</option>
+                        <option value="Yukon">Yukon</option>
+                        <option value="Northwest Territories">Northwest Territories</option>
+                    </select>
+                </div>
+
+                <div class="row mb-3 mt-4">
+                    <div class="col">
+                        <label style="margin-left: 30px">آیا تاکنون برای هر یک از برنامه های مهاجرتی دائم یا موقت کانادا
+                            اقدام کرده اید؟</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="attempt" type="radio"
+                                   value="0" onclick="function showImmigrationProgram() {
             $('#immigration_program').show();
             }
             showImmigrationProgram()">
-                        <label class="form-check-label" for="inlineRadio1">بله</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="attempt" type="radio"
-                               value="1" onclick="function hideImmigrationProgram() {
+                            <label class="form-check-label" for="inlineRadio1">بله</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="attempt" type="radio"
+                                   value="1" onclick="function hideImmigrationProgram() {
             $('#immigration_program').hide();
             }
             hideImmigrationProgram()">
-                        <label class="form-check-label" for="inlineRadio2">خیر</label>
+                            <label class="form-check-label" for="inlineRadio2">خیر</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="immigration_program">
+                    <div class="row mb-1">
+                        <div class="col">
+<!--                            <input class="form-control" name="immigration_program" placeholder="نام برنامه" type="text">-->
+                            <select class="form-select" aria-label="Default select example" name="immigration_program">
+                                <option selected>نام برنامه</option>
+                                <option value="Express Entry">اکسپرس انتری</option>
+                                <option value="Provincial nominees">برنامه های استانی</option>
+                                <option value="Start-up Visa">استارتاپ</option>
+                                <option value="Entrepreneurship">کارآفرینی</option>
+                                <option value="Self-employed">خوداشتغالی</option>
+                                <option value="Study permit">تحصیلی</option>
+                                <option value="Work permit">کاری</option>
+                                <option value="Sponsorship">اسپانسرشیپ</option>
+                                <option value="Refugees">پناهندگی</option>
+                                <option value="Other">سایر</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <input data-jdp class="form-control" name="attempt_date" placeholder="تاریخ اقدام "
+                                   type="text">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="form-floating">
+                            <textarea class="form-control" name="attempt_result" placeholder="نتیجه اقدام"
+                                      rows="3"></textarea>
+                            <label>نتیجه اقدام</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col">
+<!--                        <input class="form-control" name="fund"-->
+<!--                               placeholder="میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟" type="text">-->
+                        <select class="form-select" aria-label="Default select example" name="fund">
+                            <option selected>میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟(به دلار)</option>
+                            <option value="5000-10000">5000-10000</option>
+                            <option value="10000-20000">10000-20000</option>
+                            <option value="20000-40000">20000-40000</option>
+                        </select>
                     </div>
                 </div>
             </div>
-            <div id="immigration_program">
-                <div class="row mb-1">
-                    <div class="col form-floating">
-                        <input class="form-control" name="immigration_program" placeholder="نام برنامه" type="text">
-                        <label>نام برنامه</label>
-                    </div>
-                    <div class="col form-floating">
-                        <input data-jdp class="form-control" name="attempt_date" placeholder="تاریخ اقدام "
-                               type="text">
-                        <label>تاریخ اقدام </label>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="form-floating">
-                        <textarea class="form-control" name="attempt_result" placeholder="نتیجه اقدام" rows="3"></textarea>
-                        <label>نتیجه اقدام</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-5">
-                <div class="col form-floating">
-                    <input class="form-control" name="fund"
-                           placeholder="میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟" type="text">
-                    <label>میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟</label>
-                </div>
-            </div>
-        </div>
 
-<div id="spouse">
-    <div class="row justify-content-center mb-2">
-        <div class="col text-center"><h5>اطلاعات همسر</h5></div>
-    </div>
-    <hr>
-    <div class="row justify-content-center">
-        <div class="row justify-content-start mb-2">
-            <div class="col text-right"><h6>اطلاعات هویتی</h6></div>
-        </div>
-        <div class="row mb-1">
-            <div class="col form-floating">
-                <input class="form-control" name="spouse_name" placeholder="نام" type="text">
-                <label>نام</label>
-            </div>
-            <div class=" col-xl-3 form-floating">
-                <input class="form-control" name="spouse_lastname" placeholder="نام خانوادگی" type="text">
-                <label>نام خانوادگی</label>
-            </div>
-            <div class="col form-floating">
-                <input data-jdp class="form-control" name="spouse_birthday" placeholder="تاریخ تولد "
-                       type="text">
-                <label>تاریخ تولد </label>
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col form-floating">
-                <input class="form-control" name="spouse_country" placeholder="کشور محل سکونت" type="text">
-                <label>کشور محل سکونت</label>
-            </div>
-            <div class="col form-floating">
-                <input class="form-control" name="spouse_birthplace" placeholder="محل تولد" type="text">
-                <label>محل تولد</label>
-            </div>
-        </div>
-        <div class="row mb-1">
-            <div class="col form-floating">
-                <input class="form-control" name="s_found_us_via" placeholder="نحوه آشنایی با شرکت" type="text">
-                <label>نحوه آشنایی با شرکت</label>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row justify-content-center">
-        <div class="row justify-content-start mb-2">
-            <div class="col text-right"><h6>اطلاعات تحصیلی</h6></div>
-        </div>
-        <div class="row mb-1" id="s_education_input_wrapper">
-            <div class=" col-xl-3 form-floating">
-                <input class="form-control" name="spouse_degree[]" placeholder="مدرک تحصیلی" type="text">
-                <label>مدرک تحصیلی</label>
-            </div>
-            <div class=" col-xl-3 form-floating">
-                <input class="form-control" name="spouse_major[]" placeholder="رشته" type="text">
-                <label>رشته</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input class="form-control" name="spouse_school[]" placeholder="محل تحصیل" type="text">
-                <label>محل تحصیل</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input data-jdp class="form-control" name="spouse_graduated_at[]" placeholder="تاریخ فارغ التحصیلی"
-                       type="text">
-                <label>تاریخ فارغ التحصیلی</label>
-            </div>
-        </div>
-        <div class="row mb-2" id="s_more-education-input" style="display: contents"></div>
-        <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalDegree() {
+            <div id="spouse">
+                <div class="row justify-content-center mb-2">
+                    <div class="col text-center"><h5>اطلاعات همسر</h5></div>
+                </div>
+                <hr>
+                <div class="row justify-content-center">
+                    <div class="row justify-content-start mb-2">
+                        <div class="col text-right"><h6>اطلاعات هویتی</h6></div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col form-floating">
+                            <input class="form-control" name="spouse_name" placeholder="نام" type="text">
+                            <label>نام</label>
+                        </div>
+                        <div class=" col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_lastname" placeholder="نام خانوادگی" type="text">
+                            <label>نام خانوادگی</label>
+                        </div>
+                        <div class="col form-floating">
+                            <input data-jdp class="form-control" name="spouse_birthday" placeholder="تاریخ تولد "
+                                   type="text">
+                            <label>تاریخ تولد </label>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col form-floating">
+                            <input class="form-control" name="spouse_country" placeholder="کشور محل سکونت" type="text">
+                            <label>کشور محل سکونت</label>
+                        </div>
+                        <div class="col form-floating">
+                            <input class="form-control" name="spouse_birthplace" placeholder="محل تولد" type="text">
+                            <label>محل تولد</label>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col form-floating">
+                            <input class="form-control" name="s_found_us_via" placeholder="نحوه آشنایی با شرکت"
+                                   type="text">
+                            <label>نحوه آشنایی با شرکت</label>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row justify-content-center">
+                    <div class="row justify-content-start mb-2">
+                        <div class="col text-right"><h6>اطلاعات تحصیلی</h6></div>
+                    </div>
+                    <div class="row mb-1" id="s_education_input_wrapper">
+                        <div class=" col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_degree[]" placeholder="مدرک تحصیلی" type="text">
+                            <label>مدرک تحصیلی</label>
+                        </div>
+                        <div class=" col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_major[]" placeholder="رشته" type="text">
+                            <label>رشته</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_school[]" placeholder="محل تحصیل" type="text">
+                            <label>محل تحصیل</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input data-jdp class="form-control" name="spouse_graduated_at[]"
+                                   placeholder="تاریخ فارغ التحصیلی"
+                                   type="text">
+                            <label>تاریخ فارغ التحصیلی</label>
+                        </div>
+                    </div>
+                    <div class="row mb-2" id="s_more-education-input" style="display: contents"></div>
+                    <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalDegree() {
             $('#s_education_input_wrapper').clone().find('input').val('').end().appendTo('#s_more-education-input');
             }
             addAdditionalDegree()" type="button">+
-        </button>
-    </div>
-    <div class="row mb-3">
-        <div class="col">
-            <label style="margin-left: 30px">آیا مدرک شما در کانادا در پنج سال اخیر ارزیابی شده است؟ </label>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" name="is_evaluated" type="radio"
-                       value="0" onclick="function showEvaluated() {
+                    </button>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label style="margin-left: 30px">آیا مدرک شما در کانادا در پنج سال اخیر ارزیابی شده
+                            است؟ </label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="is_evaluated" type="radio"
+                                   value="0" onclick="function showEvaluated() {
             $('#s_evaluation_info').show();
             }
             showEvaluated()">
-                <label class="form-check-label" for="inlineRadio1">بله</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" name="is_evaluated" type="radio"
-                       value="1" onclick="function hideEvaluated() {
+                            <label class="form-check-label" for="inlineRadio1">بله</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="is_evaluated" type="radio"
+                                   value="1" onclick="function hideEvaluated() {
             $('#s_evaluation_info').hide();
             }
             hideEvaluated()">
-                <label class="form-check-label" for="inlineRadio2">خیر</label>
-            </div>
-        </div>
-    </div>
-    <div class="row mb-2" id="s_evaluation_info">
-        <div class="col form-floating">
-            <input class="form-control" name="s_evaluated_by" placeholder="نام سازمان" type="text">
-            <label>نام سازمان</label>
-        </div>
-        <div class="col form-floating">
-            <input data-jdp class="form-control" name="s_evaluated_at" placeholder="تاریخ" type="text">
-            <label>تاریخ </label>
-        </div>
-    </div>
-    <hr>
-    <div class="row justify-content-center">
-        <div class="row justify-content-start mb-2">
-            <div class="col text-right"><h6>اطلاعات شغلی</h6></div>
-        </div>
-        <div class="row mb-1" id="s_job_input_wrapper">
-            <div class="col-xl-3 form-floating">
-                <input class="form-control" name="spouse_job_position[]" placeholder="سمت شغلی" type="text">
-                <label>سمت شغلی</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input class="form-control" name="spouse_company[]" placeholder="نام شرکت" type="text">
-                <label>نام شرکت</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input data-jdp class="form-control" name="spouse_job_start_date[]" placeholder="تاریخ شروع" type="text">
-                <label>تاریخ شروع</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input data-jdp class="form-control" name="spouse_job_end_date[]" placeholder="تاریخ پایان" type="text">
-                <label>تاریخ پایان</label>
-            </div>
-        </div>
-        <div class="row mb-2" id="s_more-job-input" style="display: contents"></div>
-        <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalJob() {
+                            <label class="form-check-label" for="inlineRadio2">خیر</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2" id="s_evaluation_info">
+                    <div class="col form-floating">
+                        <input class="form-control" name="s_evaluated_by" placeholder="نام سازمان" type="text">
+                        <label>نام سازمان</label>
+                    </div>
+                    <div class="col form-floating">
+                        <input data-jdp class="form-control" name="s_evaluated_at" placeholder="تاریخ" type="text">
+                        <label>تاریخ </label>
+                    </div>
+                </div>
+                <hr>
+                <div class="row justify-content-center">
+                    <div class="row justify-content-start mb-2">
+                        <div class="col text-right"><h6>اطلاعات شغلی</h6></div>
+                    </div>
+                    <div class="row mb-1" id="s_job_input_wrapper">
+                        <div class="col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_job_position[]" placeholder="سمت شغلی" type="text">
+                            <label>سمت شغلی</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_company[]" placeholder="نام شرکت" type="text">
+                            <label>نام شرکت</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input data-jdp class="form-control" name="spouse_job_start_date[]" placeholder="تاریخ شروع"
+                                   type="text">
+                            <label>تاریخ شروع</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input data-jdp class="form-control" name="spouse_job_end_date[]" placeholder="تاریخ پایان"
+                                   type="text">
+                            <label>تاریخ پایان</label>
+                        </div>
+                    </div>
+                    <div class="row mb-2" id="s_more-job-input" style="display: contents"></div>
+                    <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalJob() {
             $('#s_job_input_wrapper').clone().find('input').val('').end().appendTo('#s_more-job-input');
             }
             addAdditionalJob()" type="button">+
-        </button>
+                    </button>
 
-    </div>
-    <hr>
-    <div class="row justify-content-center">
-        <div class="row justify-content-start mb-2">
-            <div class="col text-right"><h6>سطح دانش زبان</h6></div>
-        </div>
-        <div class="row mb-1" id="s_exam_input_wrapper">
-            <div class="col-xl-3 form-floating">
-                <input class="form-control" name="spouse_exam_title[]" placeholder="نام مدرک زبان" type="text">
-                <label>نام مدرک زبان</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input class="form-control" name="spouse_exam_type[]" placeholder="نوع مدرک" type="text">
-                <label>نوع مدرک</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input data-jdp class="form-control" name="spouse_exam_date[]" placeholder="تاریخ امتحان" type="text">
-                <label>تاریخ امتحان</label>
-            </div>
-            <div class="col-xl-3 form-floating">
-                <input class="form-control" name="spouse_score[]" placeholder="نمره" type="text">
-                <label>نمره</label>
-            </div>
-        </div>
-        <div class="row mb-2" id="s_more-exam-input" style="display: contents"></div>
-        <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalExam() {
+                </div>
+                <hr>
+                <div class="row justify-content-center">
+                    <div class="row justify-content-start mb-2">
+                        <div class="col text-right"><h6>سطح دانش زبان</h6></div>
+                    </div>
+                    <div class="row mb-1" id="s_exam_input_wrapper">
+                        <div class="col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_exam_title[]" placeholder="نام مدرک زبان"
+                                   type="text">
+                            <label>نام مدرک زبان</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_exam_type[]" placeholder="نوع مدرک" type="text">
+                            <label>نوع مدرک</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input data-jdp class="form-control" name="spouse_exam_date[]" placeholder="تاریخ امتحان"
+                                   type="text">
+                            <label>تاریخ امتحان</label>
+                        </div>
+                        <div class="col-xl-3 form-floating">
+                            <input class="form-control" name="spouse_score[]" placeholder="نمره" type="text">
+                            <label>نمره</label>
+                        </div>
+                    </div>
+                    <div class="row mb-2" id="s_more-exam-input" style="display: contents"></div>
+                    <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalExam() {
             $('#s_exam_input_wrapper').clone().find('input').val('').end().appendTo('#s_more-exam-input');
             }
             addAdditionalExam()" type="button">+
-        </button>
-    </div>
-    <hr>
-    <div class="row justify-content-start mb-2">
-        <div class="col text-right"><h6>میزان دارایی</h6></div>
-    </div>
-    <div class="row mb-3">
-        <div class="col d-flex flex-column">
-            <label>لطفا میزان دارایی خود را از عددی بین 50 هزار دلار کانادا تا یک میلیون دلار کانادا را اعلام
-                کنید</label>
-            <input id="s_asset_range" step="10000"  class="form-control-range mt-2" dir="ltr" name="spouse_asset" type="range" min="50000" max="1000000">
-        </div>
-        <div id="s_show_asset" style="font-weight: bold" class="mt-3"></div>
-    </div>
-</div>
-        <div class="row justify-content-center mb-2">
-            <div class="col text-center"><h5>مشخصات فرزندان</h5></div>
-        </div>
-        <hr>
-        <div class="row justify-content-center">
-            <div class="row mb-2 children-input-wrapper" id="children-input-wrapper">
-                <div class="col form-floating">
-                    <input class="form-control" name="child_name[]" placeholder="نام فرزند" type="text">
-                    <label>نام فرزند</label>
+                    </button>
                 </div>
-                <div class="col form-floating">
-                    <input data-jdp class="form-control" name="child_birthday[]" placeholder="تاریخ تولد" type="text">
-                    <label>تاریخ تولد </label>
+                <hr>
+                <div class="row justify-content-start mb-2">
+                    <div class="col text-right"><h6>میزان دارایی</h6></div>
                 </div>
-
+                <div class="row mb-3">
+                    <div class="col d-flex flex-column">
+                        <label>لطفا میزان دارایی خود را از عددی بین 50 هزار دلار کانادا تا یک میلیون دلار کانادا را
+                            اعلام
+                            کنید</label>
+                        <input id="s_asset_range" step="10000" class="form-control-range mt-2" dir="ltr"
+                               name="spouse_asset" type="range" min="50000" max="1000000">
+                    </div>
+                    <div id="s_show_asset" style="font-weight: bold" class="mt-3"></div>
+                </div>
             </div>
-            <div class="row mb-2" id="more-children-input" style="display: contents"></div>
-            <button class="btn btn-primary col-1 mb-3" onclick="function addChild() {
+            <div class="row justify-content-center mb-2">
+                <div class="col text-center"><h5>مشخصات فرزندان</h5></div>
+            </div>
+            <hr>
+            <div class="row justify-content-center">
+                <div class="row mb-2 children-input-wrapper" id="children-input-wrapper">
+                    <div class="col form-floating">
+                        <input class="form-control" name="child_name[]" placeholder="نام فرزند" type="text">
+                        <label>نام فرزند</label>
+                    </div>
+                    <div class="col form-floating">
+                        <input data-jdp class="form-control" name="child_birthday[]" placeholder="تاریخ تولد"
+                               type="text">
+                        <label>تاریخ تولد </label>
+                    </div>
+
+                </div>
+                <div class="row mb-2" id="more-children-input" style="display: contents"></div>
+                <button class="btn btn-primary col-1 mb-3" onclick="function addChild() {
             $('#children-input-wrapper').clone().find('input').val('').end().appendTo('#more-children-input');
             }
             addChild()" type="button">+
-            </button>
-        </div>
-
-        <div class="row mb-3 mt-6">
-            <div class="form-floating">
-                <textarea class="form-control" name="note" placeholder="نوت مشاور" rows="3"></textarea>
-                <label>نوت مشاور</label>
+                </button>
             </div>
-        </div>
-        <div class="row justify-content-center mb-5">
-            <button class="col col-6 btn btn-primary" type="submit" name="submit_button">ثبت و ارسال نوت</button>
-        </div>
+
+            <div class="row mb-3 mt-6">
+                <div class="form-floating">
+                    <textarea class="form-control" name="note" placeholder="نوت مشاور" rows="3"></textarea>
+                    <label>نوت مشاور</label>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-5">
+                <button class="col col-6 btn btn-primary" type="submit" name="submit_button">ثبت و ارسال نوت</button>
+            </div>
 
     </form>
 </div>
 <script type="text/javascript" src="./dist/jalalidatepicker.min.js"></script>
 <script>
     jalaliDatepicker.startWatch({
-        separatorChars:{date:"-",between:" ",time:":"},
-        dayRendering:function(dayOptions,input){
+        separatorChars: {date: "-", between: " ", time: ":"},
+        dayRendering: function (dayOptions, input) {
             return {
-                isHollyDay: dayOptions.month===1 && dayOptions.day<=4,
+                isHollyDay: dayOptions.month === 1 && dayOptions.day <= 4,
                 // isValid = false, امکان غیر فعال کردن روز
                 // className = "nowruz" امکان افزودن کلاس برای درج استایل به روز
             }
