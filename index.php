@@ -661,7 +661,11 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                     </div>
                 </div>
             </div>
-
+<!------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------>
             <div id="spouse">
                 <div class="row justify-content-center mb-2">
                     <div class="col text-center"><h5>اطلاعات همسر</h5></div>
@@ -681,7 +685,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                             <label>نام خانوادگی</label>
                         </div>
                         <div class="col form-floating">
-                            <input data-jdp class="form-control" name="spouse_birthday" placeholder="تاریخ تولد "
+                            <input data-jdp class="form-control" name="spouse_birthday" placeholder="تاریخ تولد"
                                    type="text">
                             <label>تاریخ تولد </label>
                         </div>
@@ -807,25 +811,55 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                         <div class="col text-right"><h6>سطح دانش زبان</h6></div>
                     </div>
                     <div class="row mb-1" id="s_exam_input_wrapper">
-                        <div class="col-xl-3 form-floating">
-                            <input class="form-control" name="spouse_exam_title[]" placeholder="نام مدرک زبان"
-                                   type="text">
-                            <label>نام مدرک زبان</label>
+                        <div class="row mb-2">
+                            <div class="col-xl-3">
+                                <select class="form-select" aria-label="Default select example" name="spouse_exam_title[]">
+                                    <option selected>نام مدرک زبان</option>
+                                    <option value="IELTS">IELTS</option>
+                                    <option value="TEF(Canada)">TEF(Canada)</option>
+                                    <option value="CELPIP">CELPIP</option>
+                                    <option value="TOEFL">TOEFL</option>
+                                    <option value="Doulingo">Doulingo</option>
+                                    <option value="PTE">PTE</option>
+                                </select>
+                                <!--                    <input class="form-control" name="exam_title[]" placeholder="نام مدرک زبان" type="text">-->
+                                <!--                    <label>نام مدرک زبان</label>-->
+                            </div>
+                            <div class="col">
+                                <select class="form-select" aria-label="Default select example" name="spouse_exam_type[]">
+                                    <option selected>نوع مدرک</option>
+                                    <option value="General">General</option>
+                                    <option value="Academic">Academic</option>
+                                </select>
+                                <!--                    <input class="form-control" name="exam_type[]" placeholder="نوع مدرک" type="text">-->
+                                <!--                    <label>نوع مدرک</label>-->
+                            </div>
+                            <div class="col">
+                                <input data-jdp class="form-control" name="spouse_exam_date[]" placeholder="تاریخ امتحان" type="text">
+                            </div>
+                            <!--                <div class="col-xl-3 form-floating">-->
+                            <!--                    <input class="form-control" name="score[]" placeholder="نمره" type="text">-->
+                            <!--                    <label>نمره</label>-->
+                            <!--                </div>-->
                         </div>
-                        <div class="col-xl-3 form-floating">
-                            <input class="form-control" name="spouse_exam_type[]" placeholder="نوع مدرک" type="text">
-                            <label>نوع مدرک</label>
+                        <div class="row mb-4">
+                            <div class="col-xl-3 form-floating">
+                                <input class="form-control" name="spouse_listening[]" placeholder="Listening" type="text">
+                                <label>Listening</label>
+                            </div>
+                            <div class="col-xl-3 form-floating">
+                                <input class="form-control" name="spouse_reading[]" placeholder="Reading" type="text">
+                                <label>Reading</label>
+                            </div>
+                            <div class="col-xl-3 form-floating">
+                                <input class="form-control" name="spouse_writing[]" placeholder="Writing" type="text">
+                                <label>Writing</label>
+                            </div>
+                            <div class="col-xl-3 form-floating">
+                                <input class="form-control" name="spouse_speaking[]" placeholder="Speaking" type="text">
+                                <label>Speaking</label>
+                            </div>
                         </div>
-                        <div class="col-xl-3 form-floating">
-                            <input data-jdp class="form-control" name="spouse_exam_date[]" placeholder="تاریخ امتحان"
-                                   type="text">
-                            <label>تاریخ امتحان</label>
-                        </div>
-                        <div class="col-xl-3 form-floating">
-                            <input class="form-control" name="spouse_score[]" placeholder="نمره" type="text">
-                            <label>نمره</label>
-                        </div>
-                    </div>
                     <div class="row mb-2" id="s_more-exam-input" style="display: contents"></div>
                     <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalExam() {
             $('#s_exam_input_wrapper').clone().find('input').val('').end().appendTo('#s_more-exam-input');
@@ -872,15 +906,15 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
             addChild()" type="button">+
                 </button>
             </div>
-
-            <div class="row mb-3 mt-6">
-                <div class="form-floating">
-                    <textarea class="form-control" name="note" placeholder="نوت مشاور" rows="3"></textarea>
-                    <label>نوت مشاور</label>
-                </div>
-            </div>
+<!---->
+<!--            <div class="row mb-3 mt-6">-->
+<!--                <div class="form-floating">-->
+<!--                    <textarea class="form-control" name="note" placeholder="نوت مشاور" rows="3"></textarea>-->
+<!--                    <label>نوت مشاور</label>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="row justify-content-center mb-5">
-                <button class="col col-6 btn btn-primary" type="submit" name="submit_button">ثبت و ارسال نوت</button>
+                <button class="col col-6 btn btn-primary" type="submit" name="submit_button">ثبت</button>
             </div>
 
     </form>
