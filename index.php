@@ -185,8 +185,14 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $address
         $exam_title = $_POST['spouse_exam_title'];
         $exam_type = $_POST['spouse_exam_type'];
         $exam_date = $_POST['spouse_exam_date'];
-        $score = $_POST['spouse_score'];
-        list($i, $language_proficiency_data) = insertLanguageProficiency($score, $dependant_id, $exam_date, $exam_title, $exam_type, $conn);
+//        $score = $_POST['spouse_score'];
+        $listening = $_POST['spouse_listening'];
+        $reading = $_POST['spouse_reading'];
+        $writing = $_POST['spouse_writing'];
+        $speaking = $_POST['spouse_speaking'];
+        list($i, $language_proficiency_data) = insertLanguageProficiency($listening, $reading, $writing, $speaking, $customer_id, $exam_date, $exam_title, $exam_type, $conn);
+
+//        list($i, $language_proficiency_data) = insertLanguageProficiency($score, $dependant_id, $exam_date, $exam_title, $exam_type, $conn);
 
 //---------------------------------------------------------------additional information---------------------------------
         $asset = $_POST['spouse_asset'];
