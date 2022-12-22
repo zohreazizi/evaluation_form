@@ -659,10 +659,10 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
 <!--                        <input class="form-control" name="fund"-->
 <!--                               placeholder="میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟" type="text">-->
                         <select class="form-select" aria-label="Default select example" name="fund">
-                            <option selected>میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟(به دلار)</option>
-                            <option value="5000-10000">5000-10000</option>
-                            <option value="10000-20000">10000-20000</option>
-                            <option value="20000-40000">20000-40000</option>
+                            <option selected>میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟</option>
+                            <option value="5000-10000">بین 5000 تا 10000 دلار</option>
+                            <option value="10000-20000">بین 10000 تا 20000 دلار</option>
+                            <option value="20000-40000">بین 20000 تا 40000 دلار</option>
                         </select>
                     </div>
                 </div>
