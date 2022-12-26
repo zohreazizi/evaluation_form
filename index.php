@@ -8,30 +8,22 @@
 //require '../PHPMailer/src/SMTP.php';
 
 if (isset($_POST['submit_button'])) {
-    $conn = new mysqli('localhost', 'iciservi_1', 'amiirsadeqi@gmail.com', 'iciservi_1');
+    $conn = new mysqli('localhost', 'root', '', 'immigration_required_info');
     mysqli_set_charset($conn, "utf8");
 
     function insertEducation($degree, $customer_id, $major, $school, $graduated_at, mysqli $conn)
     {
-        for ($i = 0; $i < count($degree); $i++) {
-            $education_data = "insert into 101_education(customer_id, position , major, insitute, duration
-                      ,end_date, start_date, status, place, whois)
-                      values ('" . $customer_id . "', '" . $degree[$i] .
-                "', '" . $major[$i] . "', '" . $school[$i] . "', '',
-         '" . $graduated_at[$i] . "', CURRENT_DATE, 0, '', 0)";
-            $conn->query($education_data);
+            $education_data = "insert into 101_education(customer_id, position , major, insitute, duration, end_date, start_date, status, place, whois)
+                                            values ('" . $customer_id . "', '" . $degree . "', '" . $major . "', '" . $school . "', '', '" . $graduated_at . "', CURRENT_DATE, 0, '', 0)";
+        if (!$conn->query($education_data)) {
+            echo $conn->error;
         }
-        return array($i, $education_data);
     }
-
-
     function insertWorkExperience($job_position, $customer_id, $company, $job_start_date, $job_end_date, mysqli $conn)
     {
         for ($i = 0; $i < count($job_position); $i++) {
-            $work_experience_data = "insert into 101_job(customer_id, typeOf, institue, start_date, end_date, status, whois,
-place)
-values ('" . $customer_id . "', '" . $job_position[$i] . "', '" . $company[$i] . "', '" . $job_start_date[$i] . "', '"
-                . $job_end_date[$i] . "', 0, 0, '')";
+            $work_experience_data = "insert into 101_job(customer_id, typeOf, institue, start_date, end_date, status, whois, place)
+                                                values ('" . $customer_id . "', '" . $job_position[$i] . "', '" . $company[$i] . "', '" . $job_start_date[$i] . "', '" . $job_end_date[$i] . "', 0, 0, '')";
             $conn->query($work_experience_data);
 //        if (!$conn->query($work_experience_data)) {
 //            print_r($conn->error_list);
@@ -39,13 +31,11 @@ values ('" . $customer_id . "', '" . $job_position[$i] . "', '" . $company[$i] .
         }
         return array($i, $work_experience_data);
     }
-
-
     function insertLanguageProficiency($listening, $reading, $writing, $speaking, $customer_id, $exam_date, $exam_title, $exam_type, mysqli $conn)
     {
         for ($i = 0; $i < count($exam_title); $i++) {
             $language_proficiency_data = "insert into IELTS(cid, issue_date, listening, reading, writing, speaking, title, type)
-values ('" . $customer_id . "', '" . $exam_date[$i] . "', '" . $listening[$i] . "', '" . $reading[$i] . "', '" . $writing[$i] . "', '" . $speaking[$i] . "', '" . $exam_title[$i] . "', '" . $exam_type[$i] . "')";
+                                                    values ('" . $customer_id . "', '" . $exam_date[$i] . "', '" . $listening[$i] . "', '" . $reading[$i] . "', '" . $writing[$i] . "', '" . $speaking[$i] . "', '" . $exam_title[$i] . "', '" . $exam_type[$i] . "')";
             $conn->query($language_proficiency_data);
 //        if (!$conn->query($language_proficiency_data)) {
 //            print_r($conn->error_list);
@@ -53,10 +43,8 @@ values ('" . $customer_id . "', '" . $exam_date[$i] . "', '" . $listening[$i] . 
         }
         return array($i, $language_proficiency_data);
     }
-
     if ($conn->connect_error) {
         die('Connection Failed : ' . $conn->connect_error);
-
     } else {
         $name = $_POST['name'];
         $lastname = $_POST['lastname'];
@@ -66,11 +54,8 @@ values ('" . $customer_id . "', '" . $exam_date[$i] . "', '" . $listening[$i] . 
         $address = $_POST['country'] . ' | ' . $_POST['address'];
         $birthplace = $_POST['birthplace'];
         $marital_status = $_POST['marital_status'];
-        $customer_data = "insert into customers(name, family_name, birthday, mobile, email, address,birthplace, marriage,
-type, code_posti, passport_issue, passport_expire, author, ext, cntst, password_status)
-values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $phone_number . "', '"
-            . $email . "', '" . $address . "', '" . $birthplace . "', '" . $marital_status . "'
-, 1, '', CURRENT_DATE, CURRENT_DATE, '', 0, 0, 0)";
+        $customer_data = "insert into customers(name, family_name, birthday, mobile, email, address,birthplace, marriage, type, code_posti, passport_issue, passport_expire, author, ext, cntst, password_status)
+                                   values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $phone_number . "', '" . $email . "', '" . $address . "', '" . $birthplace . "', '" . $marital_status . "', 1, '', CURRENT_DATE, CURRENT_DATE, '', 0, 0, 0)";
         if (!$conn->query($customer_data)) {
             echo $conn->error;
         }
@@ -86,10 +71,7 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $phone_n
         $major = $_POST['major'];
         $school = $_POST['school'];
         $graduated_at = $_POST['graduated_at'];
-        list($i, $education_data) = insertEducation($degree, $customer_id, $major, $school, $graduated_at, $conn);
-        if (!$conn->query($education_data)) {
-            print_r($conn->error_list);
-        }
+        insertEducation($degree, $customer_id, $major, $school, $graduated_at, $conn);
 //---------------------------------------------------------------work experience data-----------------------------------
 
         $job_position = $_POST['job_position'];
@@ -129,6 +111,9 @@ values ('" . $customer_id . "', '" . $child_name[$i] . "', '" . $child_birthday[
         $attempt_date = $_POST['attempt_date'];
         $attempt_result = $_POST['attempt_result'];
         $found_us_via = $_POST['found_us_via'];
+        if ($_POST['found_us_via'] === 'representative'){
+            $found_us_via = $_POST['nameOfRepresentative'];
+        }
         $documents_evaluated_by = $_POST['evaluated_by'];
         $documents_evaluated_at = $_POST['evaluated_at'];
 
@@ -169,10 +154,8 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $address
         $major = $_POST['spouse_major'];
         $school = $_POST['spouse_school'];
         $graduated_at = $_POST['spouse_graduated_at'];
-        list($i, $education_data) = insertEducation($degree, $dependant_id, $major, $school, $graduated_at, $conn);
-//    if (!$conn->query($education_data)) {
-//        print_r($conn->error_list);
-//    }
+        insertEducation($degree, $dependant_id, $major, $school, $graduated_at, $conn);
+
 //---------------------------------------------------------------work experience data-----------------------------------
 
         $job_position = $_POST['spouse_job_position'];
@@ -199,7 +182,9 @@ values ('" . $name . "', '" . $lastname . "', '" . $birthday . "', '" . $address
         $found_us_via = $_POST['s_found_us_via'];
         $documents_evaluated_by = $_POST['s_evaluated_by'];
         $documents_evaluated_at = $_POST['s_evaluated_at'];
-
+        if ($_POST['s_found_us_via'] === 'representative'){
+            $found_us_via = $_POST['s_nameOfRepresentative'];
+        }
         $additional_info = "insert into additional_info(cid, asset, found_us_via, documents_evaluated_by, documents_evaluated_at)
 values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
             $documents_evaluated_by . "', '" . $documents_evaluated_at . "')";
@@ -340,11 +325,28 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                 </div>
             </div>
             <div class="row mb-1">
-                <div class="col form-floating">
-                    <input class="form-control" name="found_us_via" placeholder="نحوه آشنایی با شرکت" type="text">
-                    <label>نحوه آشنایی با شرکت</label>
+                <div class="col">
+                    <select onchange="yesnoCheck(this);" class="form-select" aria-label="Default select example" name="found_us_via">
+                        <option selected disabled>نحوه آشنایی با شرکت</option>
+                        <option value="representative">معرف</option>
+                        <option value="Instagram">اینستاگرام</option>
+                        <option value="Telegram">تلگرام</option>
+                        <option value="Website">وب سایت</option>
+                    </select>
+                    <div id="ifYes" style="display: none;" class="mt-2">
+                        <input class="form-control" type="text" id="car" name="nameOfRepresentative" placeholder="نام معرف"/>
+                    </div>
                 </div>
             </div>
+            <script>
+                function yesnoCheck(that) {
+                    if (that.value === "representative") {
+                        document.getElementById("ifYes").style.display = "block";
+                    } else {
+                        document.getElementById("ifYes").style.display = "none";
+                    }
+                }
+            </script>
             <div class="row mb-2 mt-4 d-flex">
                 <div class="col">
                     <label style="margin-left: 30px">وضعیت تاهل</label>
@@ -374,19 +376,19 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
             </div>
             <div class="row mb-1" id="education_wrapper">
                 <div class="col-xl-3 form-floating">
-                    <input class="form-control" name="degree[]" placeholder="مقطع" type="text">
+                    <input class="form-control" name="degree" placeholder="مقطع" type="text">
                     <label>مدرک تحصیلی</label>
                 </div>
                 <div class="col form-floating">
-                    <input class="form-control" name="major[]" placeholder="رشته" type="text">
+                    <input class="form-control" name="major" placeholder="رشته" type="text">
                     <label>رشته</label>
                 </div>
                 <div class="col form-floating">
-                    <input class="form-control" name="school[]" placeholder="محل تحصیل" type="text">
+                    <input class="form-control" name="school" placeholder="محل تحصیل" type="text">
                     <label>محل تحصیل</label>
                 </div>
                 <div class="col-xl-3 form-floating">
-                    <input data-jdp class="form-control" name="graduated_at[]" placeholder="تاریخ فارغ التحصیلی"
+                    <input data-jdp class="form-control" name="graduated_at" placeholder="تاریخ فارغ التحصیلی"
                            type="text">
                     <label>تاریخ فارغ التحصیلی</label>
                 </div>
@@ -421,13 +423,18 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                 </div>
             </div>
             <div class="row mb-2" id="evaluation_info">
-                <div class="col form-floating">
-                    <input class="form-control" name="evaluated_by" placeholder="نام سازمان" type="text">
-                    <label>نام سازمان</label>
+                <div class="col">
+                    <select class="form-select" aria-label="Default select example" name="evaluated_by">
+                        <option selected disabled>نام سازمان</option>
+                        <option value="Comparative Education Service – University of Toronto School of Continuing Studies">Comparative Education Service – University of Toronto School of Continuing Studies</option>
+                        <option value="International Credential Assessment Service of Canada">International Credential Assessment Service of Canada</option>
+                        <option value="World Education Services">World Education Services</option>
+                        <option value="International Qualifications Assessment Service (IQAS)">International Qualifications Assessment Service (IQAS)</option>
+                        <option value="International Credential Evaluation Service – British Columbia Institute of Technology">International Credential Evaluation Service – British Columbia Institute of Technology</option>
+                    </select>
                 </div>
-                <div class="col form-floating">
+                <div class="col">
                     <input data-jdp class="form-control" name="evaluated_at" placeholder="تاریخ" type="text">
-                    <label>تاریخ </label>
                 </div>
             </div>
         </div>
@@ -471,7 +478,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                 <div class="row mb-2">
                     <div class="col-xl-3">
                         <select class="form-select" aria-label="Default select example" name="exam_title[]">
-                            <option selected>نام مدرک زبان</option>
+                            <option selected disabled>نام مدرک زبان</option>
                             <option value="IELTS">IELTS</option>
                             <option value="TEF(Canada)">TEF(Canada)</option>
                             <option value="CELPIP">CELPIP</option>
@@ -484,7 +491,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                     </div>
                     <div class="col">
                         <select class="form-select" aria-label="Default select example" name="exam_type[]">
-                            <option selected>نوع مدرک</option>
+                            <option selected disabled>نوع مدرک</option>
                             <option value="General">General</option>
                             <option value="Academic">Academic</option>
                         </select>
@@ -569,7 +576,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
             <div class="row mb-3" id="immediate_family">
                 <div class="col">
                     <select class="form-select" aria-label="Default select example" name="immediate_family">
-                        <option selected>نسبت شخص</option>
+                        <option selected disabled>نسبت شخص</option>
                         <option value="parents">parents</option>
                         <option value="siblings">siblings</option>
                         <option value="cousins">cousins</option>
@@ -584,7 +591,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                 <!--                </div>-->
                 <div class="col">
                     <select class="form-select" aria-label="Default select example" name="immediate_family_address">
-                        <option selected>محل زندگی شخص</option>
+                        <option selected disabled>محل زندگی شخص</option>
                         <option value="Ontario">Ontario</option>
                         <option value="British Columbia">British Columbia</option>
                         <option value="Alberta">Alberta</option>
@@ -628,7 +635,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                         <div class="col">
 <!--                            <input class="form-control" name="immigration_program" placeholder="نام برنامه" type="text">-->
                             <select class="form-select" aria-label="Default select example" name="immigration_program">
-                                <option selected>نام برنامه</option>
+                                <option selected disabled>نام برنامه</option>
                                 <option value="Express Entry">اکسپرس انتری</option>
                                 <option value="Provincial nominees">برنامه های استانی</option>
                                 <option value="Start-up Visa">استارتاپ</option>
@@ -659,7 +666,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
 <!--                        <input class="form-control" name="fund"-->
 <!--                               placeholder="میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟" type="text">-->
                         <select class="form-select" aria-label="Default select example" name="fund">
-                            <option selected>میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟</option>
+                            <option selected disabled>میزان سرمایه مورد نظرتان برای هزینه مهاجرت چقدر است؟</option>
                             <option value="5000-10000">بین 5000 تا 10000 دلار</option>
                             <option value="10000-20000">بین 10000 تا 20000 دلار</option>
                             <option value="20000-40000">بین 20000 تا 40000 دلار</option>
@@ -706,45 +713,61 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                             <label>محل تولد</label>
                         </div>
                     </div>
-                    <div class="row mb-1">
-                        <div class="col form-floating">
-                            <input class="form-control" name="s_found_us_via" placeholder="نحوه آشنایی با شرکت"
-                                   type="text">
-                            <label>نحوه آشنایی با شرکت</label>
+                    <div class="row mb-2">
+                        <div class="col">
+                            <select onchange="yesnoCheckSpouse(this);" class="form-select" aria-label="Default select example" name="s_found_us_via">
+                                <option selected disabled>نحوه آشنایی با شرکت</option>
+                                <option value="representative">معرف</option>
+                                <option value="Instagram">اینستاگرام</option>
+                                <option value="Telegram">تلگرام</option>
+                                <option value="Website">وب سایت</option>
+                            </select>
+                            <div id="s_ifYes" style="display: none;" class="mt-2">
+                                <input class="form-control" type="text" id="car" name="s_nameOfRepresentative" placeholder="نام معرف"/>
+                            </div>
                         </div>
+                    </div>
+                    <script>
+                        function yesnoCheckSpouse(that) {
+                            if (that.value === "representative") {
+                                document.getElementById("s_ifYes").style.display = "block";
+                            } else {
+                                document.getElementById("s_ifYes").style.display = "none";
+                            }
+                        }
+                    </script>
+<!--                        <div class="col form-floating">-->
+<!--                            <input class="form-control" name="s_found_us_via" placeholder="نحوه آشنایی با شرکت"-->
+<!--                                   type="text">-->
+<!--                            <label>نحوه آشنایی با شرکت</label>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <hr>
                 <div class="row justify-content-center">
                     <div class="row justify-content-start mb-2">
-                        <div class="col text-right"><h6>اطلاعات تحصیلی</h6></div>
+                        <div class="col text-right"><h6>آخرین مدرک تحصیلی</h6></div>
                     </div>
                     <div class="row mb-1" id="s_education_input_wrapper">
                         <div class=" col-xl-3 form-floating">
-                            <input class="form-control" name="spouse_degree[]" placeholder="مدرک تحصیلی" type="text">
+                            <input class="form-control" name="spouse_degree" placeholder="مدرک تحصیلی" type="text">
                             <label>مدرک تحصیلی</label>
                         </div>
                         <div class=" col-xl-3 form-floating">
-                            <input class="form-control" name="spouse_major[]" placeholder="رشته" type="text">
+                            <input class="form-control" name="spouse_major" placeholder="رشته" type="text">
                             <label>رشته</label>
                         </div>
                         <div class="col-xl-3 form-floating">
-                            <input class="form-control" name="spouse_school[]" placeholder="محل تحصیل" type="text">
+                            <input class="form-control" name="spouse_school" placeholder="محل تحصیل" type="text">
                             <label>محل تحصیل</label>
                         </div>
                         <div class="col-xl-3 form-floating">
-                            <input data-jdp class="form-control" name="spouse_graduated_at[]"
+                            <input data-jdp class="form-control" name="spouse_graduated_at"
                                    placeholder="تاریخ فارغ التحصیلی"
                                    type="text">
                             <label>تاریخ فارغ التحصیلی</label>
                         </div>
                     </div>
-                    <div class="row mb-2" id="s_more-education-input" style="display: contents"></div>
-                    <button class="btn btn-primary col-1 mb-3" onclick="function addAdditionalDegree() {
-            $('#s_education_input_wrapper').clone().find('input').val('').end().appendTo('#s_more-education-input');
-            }
-            addAdditionalDegree()" type="button">+
-                    </button>
                 </div>
                 <div class="row mb-3">
                     <div class="col">
@@ -769,13 +792,18 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
                     </div>
                 </div>
                 <div class="row mb-2" id="s_evaluation_info">
-                    <div class="col form-floating">
-                        <input class="form-control" name="s_evaluated_by" placeholder="نام سازمان" type="text">
-                        <label>نام سازمان</label>
+                    <div class="col">
+                        <select class="form-select" aria-label="Default select example" name="s_evaluated_by">
+                            <option selected disabled>نام سازمان</option>
+                            <option value="Comparative Education Service – University of Toronto School of Continuing Studies">Comparative Education Service – University of Toronto School of Continuing Studies</option>
+                            <option value="International Credential Assessment Service of Canada">International Credential Assessment Service of Canada</option>
+                            <option value="World Education Services">World Education Services</option>
+                            <option value="International Qualifications Assessment Service (IQAS)">International Qualifications Assessment Service (IQAS)</option>
+                            <option value="International Credential Evaluation Service – British Columbia Institute of Technology">International Credential Evaluation Service – British Columbia Institute of Technology</option>
+                        </select>
                     </div>
-                    <div class="col form-floating">
+                    <div class="col">
                         <input data-jdp class="form-control" name="s_evaluated_at" placeholder="تاریخ" type="text">
-                        <label>تاریخ </label>
                     </div>
                 </div>
                 <hr>

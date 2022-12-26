@@ -1,5 +1,5 @@
 <?php
-$conn = new mysqli('localhost', 'iciservi_1', 'amiirsadeqi@gmail.com', 'iciservi_1');
+$conn = new mysqli('localhost', 'root', '', 'immigration_required_info');
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
