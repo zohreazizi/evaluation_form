@@ -1,5 +1,4 @@
 <?php
-
 //use PHPMailer\PHPMailer\PHPMailer;
 //use PHPMailer\PHPMailer\Exception;
 //
@@ -7,6 +6,7 @@
 //require '../PHPMailer/src/PHPMailer.php';
 //require '../PHPMailer/src/SMTP.php';
 
+session_start();
 if (isset($_POST['submit_button'])) {
     $conn = new mysqli('localhost', 'root', '', 'immigration_required_info');
     mysqli_set_charset($conn, "utf8");
@@ -66,6 +66,10 @@ if (isset($_POST['submit_button'])) {
         }
         $customer_id = $applicant['id'];
         print_r($customer_id);
+        $_SESSION["name"] = $_POST['name'];
+        $_SESSION["email"] = $_POST['email'];
+        $_SESSION["id"] = $applicant['id'];
+
 //---------------------------------------------------------------education data-----------------------------------------
         $degree = $_POST['degree'];
         $major = $_POST['major'];
@@ -191,6 +195,7 @@ values ('" . $dependant_id . "', '" . $asset . "','" . $found_us_via . "', '" .
         if ($conn->query($additional_info)) {
             echo $conn->error;
         }
+
 //---------------------------------------------------------------note---------------------------------------------------
 
 //        $note = $_POST['note'];
